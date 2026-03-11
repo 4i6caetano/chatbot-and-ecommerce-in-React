@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 function App(props) {
+
   function ChatInput(){
     return (
       <>
@@ -15,41 +16,76 @@ function App(props) {
     )
   }
 
-  function ChatMessage({message, sender}){
+  function ChatConfig({ sender, message }){
       const senderConfig = {
         chatbot: {
-          img: "../../utils/images/mikupog.png",
-          alt: "Bot Avatar"
+          img: "/mikupog.png",
+          alt: "Bot Avatar",
         },
         user: {
-          img: "../../utils/images/sparxiepog.png",
-          alt: "user Avatar"
+          img: "/sparxiepog.png",
+          alt: "User Avatar",
         }
       }
 
-      const config = senderConfig[sender] || senderConfig.user;
+      const configuration = senderConfig[sender] || senderConfig.user;
+
       return(
-        <div>
-          {message}
-          <img src ={config.img} width="50"/>
+        <div className={`message-wrapper ${sender}`}>
+          <p>{message}</p>
+          <img src ={configuration.img} alt={configuration.alt} width="50"/>
         </div>
       );
     }
 
-  return (
-    <div>
-      <ChatInput /> 
-      {/* Component syntax, our own HTML element */}
-      <ChatMessage 
-        message="hello chatbot" 
-        sender="user"
-      />
-      <ChatMessage 
-        message="hi there!" 
-        sender="chatbot"
-      />
-    </div>
-  );
+    function getMessages(sender){
+      const allMessages = {
+        user: [
+          {message: 'Hi there, pal!',},
+          {message: 'do you like fnaf?',},
+      ],
+      chatbot: [
+        {message: 'hello maam!',},
+        {message: 'nah, not really',}
+      ]
+    }
+    return allMessages[sender] || [];
+  }
+
+  
+  function displayChat(sender){
+    const selectedList = getMessages(sender) || [];
+    return(
+      <>
+      <div className="chat-container">
+        {selectedList.map((item, index) => (
+          <>
+            <ChatConfig 
+            sender={sender}
+            message={item.message}
+            key={index}
+            />
+          </>
+        )
+        )
+        }
+      </div>
+      </>
+    );
+}
+
+return (
+  <div className='app-container'>
+    <h1>{props.titulo}</h1>
+    <ChatInput />
+    {displayChat('user')}
+    <hr />
+    {displayChat('chatbot')}
+  </div>
+)
+
+
+
 }
 
 export default App
