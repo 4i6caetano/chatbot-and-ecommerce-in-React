@@ -1,0 +1,15 @@
+function displayChat(){
+	const userMessages = getMessages('user');
+	const botMessages = getMessages('chatbot');
+
+return (
+ 	<div className="chat-container">
+  userMessages.map((item, index) =>(
+    <>
+      <ChatConfig  message={item.message} sender="user" key={`user-${index}`} />
+      <ChatConfig message={botMessages[index].message} sender="chatbot" key={`chatbot-${index}`} />
+    </>
+  ))
+	</div>
+	)
+}

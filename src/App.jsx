@@ -5,18 +5,57 @@ import './App.css'
 
 function App(props) {
 
-  function ChatInput(){
+  //dynamic html on the site
+
+  const [ inputTextFromUser, setInputTextFromUser ] = useState('');
+
+  const [chatMessages, setChatMessages] = useState({
+        user: [
+          {message: 'Hi there, pal!', id: crypto.randomUUID()},
+          {message: 'do you like fnaf?', id: crypto.randomUUID()},
+      ],
+      chatbot: [
+        {message: 'hello maam!', id: crypto.randomUUID()},
+        {message: 'nah, not really', id: crypto.randomUUID()}
+      ]
+    })
+
+    //Logic functions
+
+    function saveInputText(event){
+      setInputTextFromUser(event.target.value);
+    }
+
+    function sendMessage(){
+      setChatMessages({
+        ...chatMessages,
+        user: [
+          ...chatMessages.user,
+          { message: inputTextFromUser, id: crypto.randomUUID()}
+        ]
+    });
+
+    setInputTextFromUser('');
+  }
+
+  //Components
+
+  function ChatInput(){ //responsible for the "Input" component
+
     return (
       <>
         <input 
-        placeholder="Chat with the Chatbox here" size="30"
+        placeholder="Chat with the Chatbox here" 
+        size="30"
+        onChange={saveInputText}
+        value={inputTextFromUser}
         />
-        <button>Send</button>
+        <button onClick={sendMessage}>Send Message</button>
       </>
-    )
+    );
   }
 
-  function ChatConfig({ sender, message }){
+  function ChatItem({ sender, message }){ //responsible for the "bot and user chat" component
       const senderConfig = {
         chatbot: {
           img: "/mikupog.png",
@@ -31,61 +70,51 @@ function App(props) {
       const configuration = senderConfig[sender] || senderConfig.user;
 
       return(
-        <div className={`message-wrapper ${sender}`}>
-          <p>{message}</p>
-          <img src ={configuration.img} alt={configuration.alt} width="50"/>
+        <div className={`message-wrapper-${sender}`}>
+          {sender === 'user' ? (
+            <>
+              {message},
+              <img src ={configuration.img} alt={configuration.alt} width="50"/>
+            </>
+          )
+          : (
+            <>
+              <img src ={configuration.img} alt={configuration.alt} width="50"/>,
+              {message}
+            </>
+          )}
         </div>
       );
-    }
+}
 
-    function getMessages(sender){
-      const allMessages = {
-        user: [
-          {message: 'Hi there, pal!',},
-          {message: 'do you like fnaf?',},
-      ],
-      chatbot: [
-        {message: 'hello maam!',},
-        {message: 'nah, not really',}
-      ]
-    }
-    return allMessages[sender] || [];
-  }
 
   
-  function displayChat(sender){
-    const selectedList = getMessages(sender) || [];
-    return(
+function displayChat(){
+
+  return (
+ 	<div className="chat-container">
+    {chatMessages.user.map((item, index) => (
       <>
-      <div className="chat-container">
-        {selectedList.map((item, index) => (
-          <>
-            <ChatConfig 
-            sender={sender}
-            message={item.message}
-            key={index}
-            />
-          </>
-        )
-        )
-        }
-      </div>
+        <ChatItem  message={item.message} sender="user"/>
+        {chatMessages.chatbot[index] && (
+        <ChatItem message={chatMessages.chatbot[index].message} sender="chatbot" /> )}
       </>
-    );
+    ))}
+	</div>
+	);
 }
 
 return (
   <div className='app-container'>
     <h1>{props.titulo}</h1>
     <ChatInput />
-    {displayChat('user')}
-    <hr />
-    {displayChat('chatbot')}
+    {displayChat()}
   </div>
 )
 
 
-
-}
+  }
 
 export default App
+
+//colocar 1 elemento de um, depois um elemento de outro. Com for
