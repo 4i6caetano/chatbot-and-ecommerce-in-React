@@ -2,6 +2,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { useChat } from './useChat.jsx'
 
 function ChatInput({inputTextFromUser, saveInputText, sendMessage, handleKeyDown}){ //responsible for the "Input" component
 
@@ -71,46 +72,11 @@ function DisplayChat( {chatMessages} ){
 
 function App(props) {
 
-  const [ inputTextFromUser, setInputTextFromUser ] = useState('');
-
-  const [chatMessages, setChatMessages] = useState({
-        user: [
-          {message: 'Hi there, pal!',
-          id: crypto.randomUUID()},
-          {message: 'do you like fnaf?', 
-          id: crypto.randomUUID()},
-      ],
-      chatbot: [
-        {message: 'hello maam!', id: crypto.randomUUID()},
-        {message: 'nah, not really', id: crypto.randomUUID()}
-      ]
-    });
-
-  const handleKeyDown = (event) => {
-    if(event.key === 'Enter'){
-      sendMessage();
-    }
-  }
-
-  function saveInputText(event){
-      setInputTextFromUser(event.target.value);
-    }
-
-    function sendMessage(){
-      setChatMessages({
-        ...chatMessages,
-        user: [
-          ...chatMessages.user,
-          { message: inputTextFromUser, id: crypto.randomUUID()}
-        ]
-    });
-
-    setInputTextFromUser('');
-  }
+  const { inputTextFromUser, saveInputText, sendMessage, handleKeyDown, chatMessages} = useChat();
 
 return (
   <div className='app-container'>
-    <h1>{"Chatbot"}</h1>
+    <h1 className='title'>{"Chatbot"}</h1>
     <ChatInput 
     inputTextFromUser={inputTextFromUser}
     saveInputText={saveInputText}
@@ -126,5 +92,3 @@ return (
   }
 
 export default App
-
-//colocar 1 elemento de um, depois um elemento de outro. Com for
