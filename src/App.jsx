@@ -23,7 +23,7 @@ function ChatInput({inputTextFromUser, saveInputText, sendMessage, handleKeyDown
 
   function ChatItem({ sender, message }){ //responsible for the "bot and user chat" component
       const senderConfig = {
-        chatbot: {
+        model: {
           img: "/mikupog.png",
           alt: "Bot Avatar",
         },
@@ -62,8 +62,8 @@ function DisplayChat( {chatMessages} ){
     {chatMessages.user.map((item, index) => (
       <>
         <ChatItem  message={item.message} sender="user"/>
-        {chatMessages.chatbot[index] && (
-        <ChatItem message={chatMessages.chatbot[index].message} sender="chatbot" /> )}
+        {chatMessages.model[index] && (
+        <ChatItem message={chatMessages.model[index].message} sender="model" /> )}
       </>
     ))}
 	</div>
